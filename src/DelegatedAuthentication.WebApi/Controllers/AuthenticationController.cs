@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WorldDomination.DelegatedAuthentication.Auth0;
 using WorldDomination.DelegatedAuthentication.WebApi.Models;
 using WorldDomination.DelegatedAuthentication.WebApi.Services;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
 namespace WorldDomination.DelegatedAuthentication.WebApi.Controllers
 {
@@ -66,7 +67,8 @@ namespace WorldDomination.DelegatedAuthentication.WebApi.Controllers
             return Ok(result);
         }
 
-        private Account CreateNewAccountOrGetExistingAccount(Auth0Jwt auth0Jwt)
+        private Account CreateNewAccountOrGetExistingAccount(Auth0Jwt auth0Jwt,
+                                                             CancellationToken cancellationToken = default(CancellationToken))
         {
             if (auth0Jwt == null)
             {
@@ -95,7 +97,7 @@ namespace WorldDomination.DelegatedAuthentication.WebApi.Controllers
             {
                 throw new ArgumentNullException(nameof(auth0Jwt));
             }
-            
+
             return new CustomJwt
             {
                 Iss = _applicationSettings.CustomAuthority,

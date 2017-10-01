@@ -1,3 +1,4 @@
+using System.Threading;
 using Shouldly;
 using WorldDomination.DelegatedAuthentication.Auth0;
 using Xunit;
@@ -13,7 +14,8 @@ namespace WorldDomination.DelegatedAuthentication.Tests.AuthenticationServiceTes
             const string sourceJwtSecret = "pewpewpew";
             const string customJwtSecret = "adsadas";
             const string bearerToken = "aaaaaaaaaaa";
-            FakeAccount CreateNewAccountOrGetExistingAccount(Auth0Jwt bt) => null;
+            FakeAccount CreateNewAccountOrGetExistingAccount(Auth0Jwt bt,
+                                                             CancellationToken cancellationToken = default(CancellationToken)) => null;
             CustomJwt CopyAccountToCustomJwt(FakeAccount a, Auth0Jwt sourceJwt) => FakeData.FakeCustomJwt(null, null);
             var authenticationService = new AuthenticationService<Auth0Jwt, CustomJwt, FakeAccount>(sourceJwtSecret, customJwtSecret)
             {
@@ -46,7 +48,9 @@ namespace WorldDomination.DelegatedAuthentication.Tests.AuthenticationServiceTes
             {
                 IsJwtExpiryValidatedWhenDecoding = false
             };
-            FakeAccount CreateNewAccountOrGetExistingAccount(Auth0Jwt bt) => account;
+
+            FakeAccount CreateNewAccountOrGetExistingAccount(Auth0Jwt bt,
+                                                             CancellationToken cancellationToken = default(CancellationToken)) => account;
             CustomJwt CopyAccountToCustomJwt(FakeAccount a, Auth0Jwt sourceJwt) => FakeData.FakeCustomJwt(sourceJwt, a);
 
             // Act.

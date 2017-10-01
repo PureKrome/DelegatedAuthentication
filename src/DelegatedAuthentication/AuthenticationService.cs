@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace WorldDomination.DelegatedAuthentication
 {
@@ -29,9 +30,13 @@ namespace WorldDomination.DelegatedAuthentication
         }
 
         /// <inheritdoc />
+        public bool IsJwtExpiryValidatedWhenDecoding { private get; set; } = true;
+
+        /// <inheritdoc />
         public string Authenticate(string bearerToken,
-                                   Func<TSourceJwt, TUser> createNewAccountOrGetExistingAccount,
-                                   Func<TUser, TSourceJwt, TCustomJwt> copyAccountToCustomJwt)
+                                   Func<TSourceJwt, CancellationToken, TUser> createNewAccountOrGetExistingAccount,
+                                   Func<TUser, TSourceJwt, TCustomJwt> copyAccountToCustomJwt,
+                                   CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrWhiteSpace(bearerToken))
             {
@@ -47,7 +52,7 @@ namespace WorldDomination.DelegatedAuthentication
             {
                 throw new ArgumentNullException(nameof(copyAccountToCustomJwt));
             }
-
+            
             // First, lets decode the source token to make sure it's legit.
             var sourceJwt = JwtExtensions.Decode<TSourceJwt>(bearerToken,
                                                              _sourceJwtSecret,
@@ -62,7 +67,7 @@ namespace WorldDomination.DelegatedAuthentication
             }
 
             // Create a new account if they don't already exist in our Db.
-            var account = createNewAccountOrGetExistingAccount(sourceJwt);
+            var account = createNewAccountOrGetExistingAccount(sourceJwt, cancellationToken);
             if (account == null)
             {
                 throw new Exception(
@@ -75,8 +80,5 @@ namespace WorldDomination.DelegatedAuthentication
             // Finally, Encode this new account into a new token.
             return customJwt.Encode(_customJwtSecret);
         }
-
-        /// <inheritdoc />
-        public bool IsJwtExpiryValidatedWhenDecoding { private get; set; } = true;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace WorldDomination.DelegatedAuthentication
 {
@@ -26,9 +27,11 @@ namespace WorldDomination.DelegatedAuthentication
         /// <param name="bearerToken">string: the source JWT bearer token from the 3rd party Authentication Service.</param>
         /// <param name="createNewAccountOrGetExistingAccount">func: a method that will create a new User or use an existing User. It should return a custom User account.</param>
         /// <param name="copyAccountToCustomJwt">func: a method which will end up copying over any User information into your custom JWT.</param>
+        /// <param name="cancellationToken">CancellationToken: an optional cancellationToken.</param>
         /// <returns>string: a new custom JWT.</returns>
         string Authenticate(string bearerToken,
-                            Func<TSourceJwt, TUser> createNewAccountOrGetExistingAccount,
-                            Func<TUser, TSourceJwt, TCustomJwt> copyAccountToCustomJwt);
+                            Func<TSourceJwt, CancellationToken, TUser> createNewAccountOrGetExistingAccount,
+                            Func<TUser, TSourceJwt, TCustomJwt> copyAccountToCustomJwt,
+                            CancellationToken cancellationToken = default(CancellationToken));
     }
 }
