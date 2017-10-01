@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>WorldDomination.DelegatedAuthentication.Auth0</AssemblyName>
+    <RootNamespace>WorldDomination.DelegatedAuthentication.Auth0</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DelegatedAuthentication\DelegatedAuthentication.csproj" />
+  </ItemGroup>
+
+</Project>

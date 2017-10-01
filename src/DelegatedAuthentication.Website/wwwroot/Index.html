@@ -1,0 +1,31 @@
+<html>
+    <head>
+        <title>Delegated Authentication example.</title>
+
+        
+    </head>
+    <body>
+        <div id="NotSignedInDiv" style="display: none" >
+            <h1>You are not logged in.</h1>
+            <a href="#" id="signIn" onclick="showSignInDialog();">Please check here to start sign in process.</a>
+        </div>
+    <div id="SignedInDiv" style="display: none">
+        <h1>You are logged in. Nice!</h1>
+        <span id="signedInIdToken"></span>
+        <a href="#" id="signOut" onclick="signOut();">Please check here to sign out.</a>
+    </div>
+    <div>
+        <h1>Test an authenticated endpoint</h1>
+        <a href="#" id="testAuthenticatedEndPoint" onclick="testAuthentication()">Click here to test authenticated endpoint</a>
+        Result<br/>
+        <span id="testAuthenticationResult"></span>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.auth0.com/js/lock/10.20.0/lock.min.js"></script>
+    <script type="text/javascript" src="Auth.js"></script>
+    <script type="text/javascript" src="App.js"></script>
+    <script type="text/javascript">
+        window.onload = initialize();
+    </script>
+    </body>
+</html>
