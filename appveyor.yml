@@ -29,6 +29,7 @@ init:
                                        
 before_build:
   - dotnet --info
+  - dotnet restore
 
 build_script:
   - dotnet build -c %CONFIGURATION% /p:Version=%APPVEYOR_BUILD_VERSION%

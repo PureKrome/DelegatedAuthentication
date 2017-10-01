@@ -1,11 +1,11 @@
 ﻿using System.Collections.Concurrent;
-using WorldDomination.DelegatedAuthentication.Auth0;
-using WorldDomination.DelegatedAuthentication.WebApi.Models;
-using WorldDomination.DelegatedAuthentication.WebApi.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using WorldDomination.DelegatedAuthentication.Auth0;
+using WorldDomination.DelegatedAuthentication.WebApi.Models;
+using WorldDomination.DelegatedAuthentication.WebApi.Services;
 
 namespace WorldDomination.DelegatedAuthentication.WebApi
 {
@@ -33,9 +33,9 @@ namespace WorldDomination.DelegatedAuthentication.WebApi
             services.AddSingleton(accountsRepository);
             services.AddSingleton<IAccountService, AccountService>();
 
-            var authenticationService = new AuthenticationService<Auth0Jwt, CustomJwt>(applicationSettings.Auth0Secret,
-                                                                                       applicationSettings.CustomSecret);
-            services.AddSingleton<IAuthenticationService<Auth0Jwt, CustomJwt>>(authenticationService);
+            var authenticationService = new AuthenticationService<Auth0Jwt, CustomJwt, Account>(applicationSettings.Auth0Secret,
+                                                                                                applicationSettings.CustomSecret);
+            services.AddSingleton<IAuthenticationService<Auth0Jwt, CustomJwt, Account>>(authenticationService);
 
             services.AddCustomJwtAuthentication(applicationSettings.CustomAudience,
                                                 applicationSettings.CustomAuthority,

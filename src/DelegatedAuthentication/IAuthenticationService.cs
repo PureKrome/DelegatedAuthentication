@@ -2,10 +2,23 @@
 
 namespace WorldDomination.DelegatedAuthentication
 {
-    public interface IAuthenticationService<out TSourceJwt, in TCustomJwt>
+    /// <summary>
+    /// Interface that defines how we can authenticate to your own system given a authenticated 3rd party JWT.
+    /// </summary>
+    /// <typeparam name="TSourceJwt">Jwt: 3rd party JWT from some service which we have delegated the authentication, too.</typeparam>
+    /// <typeparam name="TCustomJwt">Jwt: you own custom JWT, based off the Source JWT.</typeparam>
+    /// <typeparam name="TUser">Your user/account.</typeparam>
+    public interface IAuthenticationService<out TSourceJwt, in TCustomJwt, TUser>
         where TSourceJwt : Jwt, new()
         where TCustomJwt : Jwt, new()
+        where TUser : new()
     {
+        /// <summary>
+        /// Do we validate the original JWT when we first receive it and decode it?
+        /// </summary>
+        /// <remarks>You should <i>only</i> set this to <code>false</code> if you are testing.</remarks>
+        bool IsJwtExpiryValidatedWhenDecoding { set; }
+
         /// <summary>
         /// This authenticates the provided bearer Token with our own system.
         /// If the User doesn't exist, then we should create a new user. Otherwise, use the exisiting User.
@@ -15,13 +28,7 @@ namespace WorldDomination.DelegatedAuthentication
         /// <param name="copyAccountToCustomJwt">func: a method which will end up copying over any User information into your custom JWT.</param>
         /// <returns>string: a new custom JWT.</returns>
         string Authenticate(string bearerToken,
-                            Func<TSourceJwt, object> createNewAccountOrGetExistingAccount,
-                            Func<object, TSourceJwt, TCustomJwt> copyAccountToCustomJwt);
-
-        /// <summary>
-        /// Do we validate the original JWT when we first receive it and decode it?
-        /// </summary>
-        /// <remarks>You should <i>only</i> set this to <code>false</code> if you are testing.</remarks>
-        bool IsJwtExpiryValidatedWhenDecoding { set; }
+                            Func<TSourceJwt, TUser> createNewAccountOrGetExistingAccount,
+                            Func<TUser, TSourceJwt, TCustomJwt> copyAccountToCustomJwt);
     }
 }

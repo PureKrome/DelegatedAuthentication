@@ -13,9 +13,9 @@ namespace WorldDomination.DelegatedAuthentication.Tests.AuthenticationServiceTes
             const string sourceJwtSecret = "pewpewpew";
             const string customJwtSecret = "adsadas";
             const string bearerToken = "aaaaaaaaaaa";
-            object CreateNewAccountOrGetExistingAccount(Auth0Jwt bt) => null;
-            CustomJwt CopyAccountToCustomJwt(object a, Auth0Jwt sourceJwt) => FakeData.FakeCustomJwt(null, null);
-            var authenticationService = new AuthenticationService<Auth0Jwt, CustomJwt>(sourceJwtSecret, customJwtSecret)
+            FakeAccount CreateNewAccountOrGetExistingAccount(Auth0Jwt bt) => null;
+            CustomJwt CopyAccountToCustomJwt(FakeAccount a, Auth0Jwt sourceJwt) => FakeData.FakeCustomJwt(null, null);
+            var authenticationService = new AuthenticationService<Auth0Jwt, CustomJwt, FakeAccount>(sourceJwtSecret, customJwtSecret)
             {
                 IsJwtExpiryValidatedWhenDecoding = false
             };
@@ -42,12 +42,12 @@ namespace WorldDomination.DelegatedAuthentication.Tests.AuthenticationServiceTes
                 Name = auth0Jwt.Name
             };
             var bearerToken = auth0Jwt.Encode(sourceJwtSecret);
-            var authenticationService = new AuthenticationService<Auth0Jwt, CustomJwt>(sourceJwtSecret, customJwtSecret)
+            var authenticationService = new AuthenticationService<Auth0Jwt, CustomJwt, FakeAccount>(sourceJwtSecret, customJwtSecret)
             {
                 IsJwtExpiryValidatedWhenDecoding = false
             };
-            object CreateNewAccountOrGetExistingAccount(Auth0Jwt bt) => account;
-            CustomJwt CopyAccountToCustomJwt(object a, Auth0Jwt sourceJwt) => FakeData.FakeCustomJwt(sourceJwt, a as FakeAccount);
+            FakeAccount CreateNewAccountOrGetExistingAccount(Auth0Jwt bt) => account;
+            CustomJwt CopyAccountToCustomJwt(FakeAccount a, Auth0Jwt sourceJwt) => FakeData.FakeCustomJwt(sourceJwt, a);
 
             // Act.
             var token = authenticationService.Authenticate(bearerToken,

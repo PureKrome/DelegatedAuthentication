@@ -2,9 +2,11 @@
 
 namespace WorldDomination.DelegatedAuthentication
 {
-    public class AuthenticationService<TSourceJwt, TCustomJwt> : IAuthenticationService<TSourceJwt, TCustomJwt>
+    /// <inheritdoc />
+    public class AuthenticationService<TSourceJwt, TCustomJwt, TUser> : IAuthenticationService<TSourceJwt, TCustomJwt, TUser>
         where TSourceJwt : Jwt, new()
         where TCustomJwt : Jwt, new()
+        where TUser : new()
     {
         private readonly string _customJwtSecret;
         private readonly string _sourceJwtSecret;
@@ -28,21 +30,34 @@ namespace WorldDomination.DelegatedAuthentication
 
         /// <inheritdoc />
         public string Authenticate(string bearerToken,
-                                   Func<TSourceJwt, object> createNewAccountOrGetExistingAccount,
-                                   Func<object, TSourceJwt, TCustomJwt> copyAccountToCustomJwt)
+                                   Func<TSourceJwt, TUser> createNewAccountOrGetExistingAccount,
+                                   Func<TUser, TSourceJwt, TCustomJwt> copyAccountToCustomJwt)
         {
             if (string.IsNullOrWhiteSpace(bearerToken))
             {
                 throw new ArgumentNullException(nameof(bearerToken));
             }
 
-            // First, lets decode the source token.
+            if (createNewAccountOrGetExistingAccount == null)
+            {
+                throw new ArgumentNullException(nameof(createNewAccountOrGetExistingAccount));
+            }
+
+            if (copyAccountToCustomJwt == null)
+            {
+                throw new ArgumentNullException(nameof(copyAccountToCustomJwt));
+            }
+
+            // First, lets decode the source token to make sure it's legit.
             var sourceJwt = JwtExtensions.Decode<TSourceJwt>(bearerToken,
                                                              _sourceJwtSecret,
                                                              IsJwtExpiryValidatedWhenDecoding);
             if (sourceJwt == null)
             {
                 // We failed to decode the bearer token.
+                // 1. It's just not in the correct format
+                // -or-
+                // 2. Failed verification (3x checks).
                 return null;
             }
 

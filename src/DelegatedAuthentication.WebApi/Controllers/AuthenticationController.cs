@@ -12,9 +12,9 @@ namespace WorldDomination.DelegatedAuthentication.WebApi.Controllers
     {
         private readonly IAccountService _accountService;
         private readonly ApplicationSettings _applicationSettings;
-        private readonly IAuthenticationService<Auth0Jwt, CustomJwt> _authenticationService;
+        private readonly IAuthenticationService<Auth0Jwt, CustomJwt, Account> _authenticationService;
 
-        public AuthenticationController(IAuthenticationService<Auth0Jwt, CustomJwt> authenticationService,
+        public AuthenticationController(IAuthenticationService<Auth0Jwt, CustomJwt, Account> authenticationService,
                                         IAccountService accountService,
                                         ApplicationSettings applicationSettings)
         {
@@ -66,7 +66,7 @@ namespace WorldDomination.DelegatedAuthentication.WebApi.Controllers
             return Ok(result);
         }
 
-        private object CreateNewAccountOrGetExistingAccount(Auth0Jwt auth0Jwt)
+        private Account CreateNewAccountOrGetExistingAccount(Auth0Jwt auth0Jwt)
         {
             if (auth0Jwt == null)
             {
@@ -83,24 +83,19 @@ namespace WorldDomination.DelegatedAuthentication.WebApi.Controllers
             return _accountService.GetOrCreateAccount(account);
         }
 
-        private CustomJwt CopyAccountToCustomJwt(object o,
+        private CustomJwt CopyAccountToCustomJwt(Account account,
                                                  Auth0Jwt auth0Jwt)
         {
-            if (o == null)
+            if (account == null)
             {
-                throw new ArgumentNullException(nameof(o));
+                throw new ArgumentNullException(nameof(account));
             }
 
             if (auth0Jwt == null)
             {
                 throw new ArgumentNullException(nameof(auth0Jwt));
             }
-
-            if (!(o is Account account))
-            {
-                return null;
-            }
-
+            
             return new CustomJwt
             {
                 Iss = _applicationSettings.CustomAuthority,
