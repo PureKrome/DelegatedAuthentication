@@ -4,6 +4,17 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>WorldDomination.DelegatedAuthentication.Auth0</AssemblyName>
     <RootNamespace>WorldDomination.DelegatedAuthentication.Auth0</RootNamespace>
+    <Authors>Justin Adler</Authors>
+    <Company>World Domination Technologies Pty. Ltd.</Company>
+    <Product></Product>
+    <Description>Auth0 specific JWT logic for use with the core Delegated Authentication library.</Description>
+    <Copyright>2017</Copyright>
+    <PackageLicenseUrl>https://github.com/PureKrome/DelegatedAuthentication/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/PureKrome/DelegatedAuthentication</PackageProjectUrl>
+    <PackageIconUrl>http://i.imgur.com/bR4Yf.jpg</PackageIconUrl>
+    <RepositoryUrl>https://github.com/PureKrome/DelegatedAuthentication</RepositoryUrl>
+    <PackageTags>auth0 delegated authentication delegation worlddomination worldomination unicorn magicalunicorn magical-unicorn</PackageTags>
+    <Version>0.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

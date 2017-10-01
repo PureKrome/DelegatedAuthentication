@@ -13,7 +13,8 @@ pull_requests:
   do_not_increment_build_number: true
 environment:
   project_name: DelegatedAuthentication
-  library_project_file: 'src\%project_name%\%project_name%.csproj'
+  core_project_file: 'src\%project_name%\%project_name%.csproj'
+  auth0_project_file: 'src\%project_name%.Auth0\%project_name%.Auth0.csproj'
   tests_project_file: 'tests\%project_name%.Tests\%project_name%.Tests.csproj'
 
 # Override the 'version' if this is a GH-tag-commit -or- this is a custom branch (i.e not 'master').
@@ -28,14 +29,14 @@ init:
                                        
 before_build:
   - dotnet --info
-  - dotnet restore 
 
 build_script:
   - dotnet build -c %CONFIGURATION% /p:Version=%APPVEYOR_BUILD_VERSION%
 
 test_script:
-  - dotnet test %tests_project_file% -c %CONFIGURATION% -v normal --no-build
-  - dotnet pack %library_project_file% -c %CONFIGURATION% /p:Version=%APPVEYOR_BUILD_VERSION% --no-build
+  - dotnet test %tests_project_file% -c %CONFIGURATION% -v normal --no-build --no-restore
+  - dotnet pack %core_project_file% -c %CONFIGURATION% /p:Version=%APPVEYOR_BUILD_VERSION% --no-build --no-restore
+  - dotnet pack %auth0_project_file% -c %CONFIGURATION% /p:Version=%APPVEYOR_BUILD_VERSION% --no-build --no-restore
 
 artifacts:
   - path: '**\*.nupkg'

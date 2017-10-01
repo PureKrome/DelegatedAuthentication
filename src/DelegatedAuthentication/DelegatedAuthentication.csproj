@@ -4,6 +4,17 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>WorldDomination.DelegatedAuthentication</AssemblyName>
     <RootNamespace>WorldDomination.DelegatedAuthentication</RootNamespace>
+    <Authors>Justin Adler</Authors>
+    <Version>0.0.0</Version>
+    <Company>World Domination Technologies Pty. Ltd.</Company>
+    <Product />
+    <Description>Authentication service that converts a JWT from a proper 3rd party Authentication service (like IdentityService, AzureAd or Auth0) to your own custom JWT.</Description>
+    <Copyright>2017</Copyright>
+    <PackageLicenseUrl>https://github.com/PureKrome/DelegatedAuthentication/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/PureKrome/DelegatedAuthentication</PackageProjectUrl>
+    <PackageIconUrl>http://i.imgur.com/bR4Yf.jpg</PackageIconUrl>
+    <RepositoryUrl>https://github.com/PureKrome/DelegatedAuthentication</RepositoryUrl>
+    <PackageTags>delegated authentication delegation worlddomination worldomination unicorn magicalunicorn magical-unicorn</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
