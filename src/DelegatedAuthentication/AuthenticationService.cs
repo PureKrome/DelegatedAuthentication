@@ -4,9 +4,10 @@ using System.Threading;
 namespace WorldDomination.DelegatedAuthentication
 {
     /// <inheritdoc />
-    public class AuthenticationService<TSourceJwt, TCustomJwt, TUser> : IAuthenticationService<TSourceJwt, TCustomJwt, TUser>
+    public class AuthenticationService<TSourceJwt, TCustomJwt, TDatabaseContext, TUser> : IAuthenticationService<TSourceJwt, TCustomJwt, TDatabaseContext, TUser>
         where TSourceJwt : Jwt, new()
         where TCustomJwt : Jwt, new()
+        where TDatabaseContext : new()
         where TUser : new()
     {
         private readonly string _customJwtSecret;
@@ -34,7 +35,7 @@ namespace WorldDomination.DelegatedAuthentication
 
         /// <inheritdoc />
         public string Authenticate(string bearerToken,
-                                   Func<TSourceJwt, CancellationToken, TUser> createNewAccountOrGetExistingAccount,
+                                   Func<TSourceJwt, TDatabaseContext, CancellationToken, TUser> createNewAccountOrGetExistingAccount,
                                    Func<TUser, TSourceJwt, TCustomJwt> copyAccountToCustomJwt,
                                    CancellationToken cancellationToken = default(CancellationToken))
         {

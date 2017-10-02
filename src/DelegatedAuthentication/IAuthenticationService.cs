@@ -8,10 +8,12 @@ namespace WorldDomination.DelegatedAuthentication
     /// </summary>
     /// <typeparam name="TSourceJwt">Jwt: 3rd party JWT from some service which we have delegated the authentication, too.</typeparam>
     /// <typeparam name="TCustomJwt">Jwt: you own custom JWT, based off the Source JWT.</typeparam>
+    /// <typeparam name="TDatabaseContext">Some database context, like a session or db-context.</typeparam>
     /// <typeparam name="TUser">Your user/account.</typeparam>
-    public interface IAuthenticationService<out TSourceJwt, in TCustomJwt, TUser>
+    public interface IAuthenticationService<out TSourceJwt, in TCustomJwt, out TDatabaseContext, TUser>
         where TSourceJwt : Jwt, new()
         where TCustomJwt : Jwt, new()
+        where TDatabaseContext : new()
         where TUser : new()
     {
         /// <summary>
@@ -30,7 +32,7 @@ namespace WorldDomination.DelegatedAuthentication
         /// <param name="cancellationToken">CancellationToken: an optional cancellationToken.</param>
         /// <returns>string: a new custom JWT.</returns>
         string Authenticate(string bearerToken,
-                            Func<TSourceJwt, CancellationToken, TUser> createNewAccountOrGetExistingAccount,
+                            Func<TSourceJwt, TDatabaseContext, CancellationToken, TUser> createNewAccountOrGetExistingAccount,
                             Func<TUser, TSourceJwt, TCustomJwt> copyAccountToCustomJwt,
                             CancellationToken cancellationToken = default(CancellationToken));
     }
