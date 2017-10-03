@@ -1,9 +1,10 @@
-﻿using WorldDomination.DelegatedAuthentication.WebApi.Models;
+﻿using System.Threading;
+using WorldDomination.DelegatedAuthentication.WebApi.Models;
 
 namespace WorldDomination.DelegatedAuthentication.WebApi.Services
 {
     public interface IAccountService
     {
-        Account GetOrCreateAccount(Account account);
+        Account GetOrCreateAccount(Account account, object dbContextOrSession, CancellationToken cancellationToken);
     }
 }

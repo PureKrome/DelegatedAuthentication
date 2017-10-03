@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WorldDomination.DelegatedAuthentication.Auth0;
@@ -13,9 +14,9 @@ namespace WorldDomination.DelegatedAuthentication.WebApi.Controllers
     {
         private readonly IAccountService _accountService;
         private readonly ApplicationSettings _applicationSettings;
-        private readonly IAuthenticationService<Auth0Jwt, CustomJwt, Account> _authenticationService;
+        private readonly IAuthenticationService<Auth0Jwt, CustomJwt, CustomAuthenticationOptions, Account> _authenticationService;
 
-        public AuthenticationController(IAuthenticationService<Auth0Jwt, CustomJwt, Account> authenticationService,
+        public AuthenticationController(IAuthenticationService<Auth0Jwt, CustomJwt, CustomAuthenticationOptions, Account> authenticationService,
                                         IAccountService accountService,
                                         ApplicationSettings applicationSettings)
         {
@@ -25,16 +26,24 @@ namespace WorldDomination.DelegatedAuthentication.WebApi.Controllers
         }
 
         [HttpPost("Authenticate")]
-        public ActionResult Authenticate(string bearerToken)
+        public async Task<ActionResult> Authenticate(string bearerToken,
+                                                     CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(bearerToken))
             {
                 return BadRequest();
             }
 
-            var newBearerToken = _authenticationService.Authenticate(bearerToken,
-                                                                     CreateNewAccountOrGetExistingAccount,
-                                                                     CopyAccountToCustomJwt);
+            var authenticationOptions = new CustomAuthenticationOptions
+            {
+                SomeDatabaseContext = new object(), // This would be were you would pass in the current EF Context or RavenDb session, etc.
+                CancellationToken = cancellationToken
+            };
+
+            var newBearerToken = await _authenticationService.AuthenticateAsync(bearerToken,
+                                                                                authenticationOptions,
+                                                                                CreateNewAccountOrGetExistingAccount,
+                                                                                CopyAccountToCustomJwt);
             if (string.IsNullOrWhiteSpace(newBearerToken))
             {
                 // We failed to decode and/or create a new bearerToken.
@@ -67,22 +76,25 @@ namespace WorldDomination.DelegatedAuthentication.WebApi.Controllers
             return Ok(result);
         }
 
-        private Account CreateNewAccountOrGetExistingAccount(Auth0Jwt auth0Jwt,
-                                                             CancellationToken cancellationToken = default(CancellationToken))
+        private Task<Account> CreateNewAccountOrGetExistingAccount(Auth0Jwt sourceJwt, CustomAuthenticationOptions options)
         {
-            if (auth0Jwt == null)
+            if (options == null)
             {
-                throw new ArgumentNullException(nameof(auth0Jwt));
+                throw new ArgumentNullException(nameof(options));
             }
 
             var account = new Account
             {
-                Email = auth0Jwt.Email,
-                UserName = auth0Jwt.Sub,
-                FullName = auth0Jwt.Name
+                Email = sourceJwt.Email,
+                UserName = sourceJwt.Sub,
+                FullName = sourceJwt.Name
             };
 
-            return _accountService.GetOrCreateAccount(account);
+            // This would most likely be some async method. But we're just doing an in-memory db so this method isn't
+            // async in this sample project.
+            var existingAccount = _accountService.GetOrCreateAccount(account, options.SomeDatabaseContext, options.CancellationToken);
+
+            return Task.FromResult(existingAccount);
         }
 
         private CustomJwt CopyAccountToCustomJwt(Account account,

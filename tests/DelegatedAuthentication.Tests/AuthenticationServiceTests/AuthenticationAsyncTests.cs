@@ -1,29 +1,32 @@
-using System.Threading;
+using System.Threading.Tasks;
 using Shouldly;
 using WorldDomination.DelegatedAuthentication.Auth0;
 using Xunit;
 
 namespace WorldDomination.DelegatedAuthentication.Tests.AuthenticationServiceTests
 {
-    public class AuthenticationTests
+    public class AuthenticationAsyncTests
     {
         [Fact]
-        public void GivenAnInvalidBearerToken_Authenticate_ReturnsNull()
+        public async Task GivenAnInvalidBearerToken_AuthenticateAsync_ReturnsNull()
         {
             // Arrange.
             const string sourceJwtSecret = "pewpewpew";
             const string customJwtSecret = "adsadas";
             const string bearerToken = "aaaaaaaaaaa";
-            FakeAccount CreateNewAccountOrGetExistingAccount(Auth0Jwt bt,
-                                                             CancellationToken cancellationToken = default(CancellationToken)) => null;
+
+            var authenticationOptions = new CustomAuthenticationOptions();
+            Task<FakeAccount> CreateNewAccountOrGetExistingAccount(Auth0Jwt sourceJwt, CustomAuthenticationOptions options) => null;
             CustomJwt CopyAccountToCustomJwt(FakeAccount a, Auth0Jwt sourceJwt) => FakeData.FakeCustomJwt(null, null);
-            var authenticationService = new AuthenticationService<Auth0Jwt, CustomJwt, FakeAccount>(sourceJwtSecret, customJwtSecret)
+
+            var authenticationService = new AuthenticationService<Auth0Jwt, CustomJwt, CustomAuthenticationOptions, FakeAccount>(sourceJwtSecret, customJwtSecret)
             {
                 IsJwtExpiryValidatedWhenDecoding = false
             };
 
             // Act.
-            var token = authenticationService.Authenticate(bearerToken,
+            var token = await authenticationService.AuthenticateAsync(bearerToken,
+                                                           authenticationOptions, 
                                                            CreateNewAccountOrGetExistingAccount,
                                                            CopyAccountToCustomJwt);
 
@@ -32,7 +35,7 @@ namespace WorldDomination.DelegatedAuthentication.Tests.AuthenticationServiceTes
         }
 
         [Fact]
-        public void GivenAValidBearerToken_Authenticate_CreatesAnAccountAndReturnsANewToken()
+        public async Task GivenAValidBearerToken_Authenticate_CreatesAnAccountAndReturnsANewToken()
         {
             // Arrange.
             const string sourceJwtSecret = "pewpewpew";
@@ -44,17 +47,18 @@ namespace WorldDomination.DelegatedAuthentication.Tests.AuthenticationServiceTes
                 Name = auth0Jwt.Name
             };
             var bearerToken = auth0Jwt.Encode(sourceJwtSecret);
-            var authenticationService = new AuthenticationService<Auth0Jwt, CustomJwt, FakeAccount>(sourceJwtSecret, customJwtSecret)
+            var authenticationOptions = new CustomAuthenticationOptions();
+            var authenticationService = new AuthenticationService<Auth0Jwt, CustomJwt, CustomAuthenticationOptions, FakeAccount>(sourceJwtSecret, customJwtSecret)
             {
                 IsJwtExpiryValidatedWhenDecoding = false
             };
 
-            FakeAccount CreateNewAccountOrGetExistingAccount(Auth0Jwt bt,
-                                                             CancellationToken cancellationToken = default(CancellationToken)) => account;
+            Task<FakeAccount> CreateNewAccountOrGetExistingAccount(Auth0Jwt sourceJwt, CustomAuthenticationOptions options) => Task.FromResult(account);
             CustomJwt CopyAccountToCustomJwt(FakeAccount a, Auth0Jwt sourceJwt) => FakeData.FakeCustomJwt(sourceJwt, a);
 
             // Act.
-            var token = authenticationService.Authenticate(bearerToken,
+            var token = await authenticationService.AuthenticateAsync(bearerToken,
+                                                           authenticationOptions,
                                                            CreateNewAccountOrGetExistingAccount,
                                                            CopyAccountToCustomJwt);
 

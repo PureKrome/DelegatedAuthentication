@@ -33,9 +33,9 @@ namespace WorldDomination.DelegatedAuthentication.WebApi
             services.AddSingleton(accountsRepository);
             services.AddSingleton<IAccountService, AccountService>();
 
-            var authenticationService = new AuthenticationService<Auth0Jwt, CustomJwt, Account>(applicationSettings.Auth0Secret,
-                                                                                                applicationSettings.CustomSecret);
-            services.AddSingleton<IAuthenticationService<Auth0Jwt, CustomJwt, Account>>(authenticationService);
+            var authenticationService = new AuthenticationService<Auth0Jwt, CustomJwt, CustomAuthenticationOptions, Account>(applicationSettings.Auth0Secret,
+                                                                                                                             applicationSettings.CustomSecret);
+            services.AddSingleton<IAuthenticationService<Auth0Jwt, CustomJwt, CustomAuthenticationOptions, Account>>(authenticationService);
 
             services.AddCustomJwtAuthentication(applicationSettings.CustomAudience,
                                                 applicationSettings.CustomAuthority,

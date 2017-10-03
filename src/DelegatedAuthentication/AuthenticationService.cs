@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Threading;
+using System.Threading.Tasks;
 
 namespace WorldDomination.DelegatedAuthentication
 {
     /// <inheritdoc />
-    public class AuthenticationService<TSourceJwt, TCustomJwt, TDatabaseContext, TUser> : IAuthenticationService<TSourceJwt, TCustomJwt, TDatabaseContext, TUser>
+    public class AuthenticationService<TSourceJwt, TCustomJwt, TAuthenticationOptions, TUser>
+        : IAuthenticationService<TSourceJwt, TCustomJwt, TAuthenticationOptions, TUser>
         where TSourceJwt : Jwt, new()
         where TCustomJwt : Jwt, new()
-        where TDatabaseContext : new()
+        where TAuthenticationOptions : IAuthenticationOptions, new()
         where TUser : new()
     {
         private readonly string _customJwtSecret;
@@ -34,10 +35,10 @@ namespace WorldDomination.DelegatedAuthentication
         public bool IsJwtExpiryValidatedWhenDecoding { private get; set; } = true;
 
         /// <inheritdoc />
-        public string Authenticate(string bearerToken,
-                                   Func<TSourceJwt, TDatabaseContext, CancellationToken, TUser> createNewAccountOrGetExistingAccount,
-                                   Func<TUser, TSourceJwt, TCustomJwt> copyAccountToCustomJwt,
-                                   CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<string> AuthenticateAsync(string bearerToken,
+                                                    TAuthenticationOptions authenticationOptions,
+                                                    Func<TSourceJwt, TAuthenticationOptions, Task<TUser>> createNewAccountOrGetExistingAccount,
+                                                    Func<TUser, TSourceJwt, TCustomJwt> copyAccountToCustomJwt)
         {
             if (string.IsNullOrWhiteSpace(bearerToken))
             {
@@ -53,7 +54,7 @@ namespace WorldDomination.DelegatedAuthentication
             {
                 throw new ArgumentNullException(nameof(copyAccountToCustomJwt));
             }
-            
+
             // First, lets decode the source token to make sure it's legit.
             var sourceJwt = JwtExtensions.Decode<TSourceJwt>(bearerToken,
                                                              _sourceJwtSecret,
@@ -68,7 +69,7 @@ namespace WorldDomination.DelegatedAuthentication
             }
 
             // Create a new account if they don't already exist in our Db.
-            var account = createNewAccountOrGetExistingAccount(sourceJwt, cancellationToken);
+            var account = await createNewAccountOrGetExistingAccount(sourceJwt, authenticationOptions);
             if (account == null)
             {
                 throw new Exception(
