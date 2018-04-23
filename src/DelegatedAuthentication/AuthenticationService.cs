@@ -1,14 +1,15 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace WorldDomination.DelegatedAuthentication
 {
     /// <inheritdoc />
-    public class AuthenticationService<TSourceJwt, TCustomJwt, TAuthenticationOptions, TUser>
-        : IAuthenticationService<TSourceJwt, TCustomJwt, TAuthenticationOptions, TUser>
+    public class AuthenticationService<TSourceJwt, TCustomJwt, TOptions, TUser>
+        : IAuthenticationService<TSourceJwt, TCustomJwt, TOptions, TUser>
         where TSourceJwt : Jwt, new()
         where TCustomJwt : Jwt, new()
-        where TAuthenticationOptions : IAuthenticationOptions, new()
+        where TOptions : ICreateANewAccountOrGetAnExistingAccountOptions, new()
         where TUser : new()
     {
         private readonly string _customJwtSecret;
@@ -36,9 +37,10 @@ namespace WorldDomination.DelegatedAuthentication
 
         /// <inheritdoc />
         public async Task<string> AuthenticateAsync(string bearerToken,
-                                                    TAuthenticationOptions authenticationOptions,
-                                                    Func<TSourceJwt, TAuthenticationOptions, Task<TUser>> createNewAccountOrGetExistingAccount,
-                                                    Func<TUser, TSourceJwt, TCustomJwt> copyAccountToCustomJwt)
+                                                    TOptions createNewAccountOrGetExistingAccountOptions,
+                                                    Func<TSourceJwt, TOptions, CancellationToken, Task<TUser>> createNewAccountOrGetExistingAccount,
+                                                    Func<TUser, TSourceJwt, TCustomJwt> copyAccountToCustomJwt,
+                                                    CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrWhiteSpace(bearerToken))
             {
@@ -68,8 +70,11 @@ namespace WorldDomination.DelegatedAuthentication
                 return null;
             }
 
-            // Create a new account if they don't already exist in our Db.
-            var account = await createNewAccountOrGetExistingAccount(sourceJwt, authenticationOptions);
+            // Create a new account if they don't already exist in the Db.
+            // Otherwise, return the existing account.
+            var account = await createNewAccountOrGetExistingAccount(sourceJwt, 
+                                                                     createNewAccountOrGetExistingAccountOptions,
+                                                                     cancellationToken);
             if (account == null)
             {
                 throw new Exception(

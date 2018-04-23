@@ -37,13 +37,13 @@ namespace WorldDomination.DelegatedAuthentication.WebApi.Controllers
             var authenticationOptions = new CustomAuthenticationOptions
             {
                 SomeDatabaseContext = new object(), // This would be were you would pass in the current EF Context or RavenDb session, etc.
-                CancellationToken = cancellationToken
             };
 
             var newBearerToken = await _authenticationService.AuthenticateAsync(bearerToken,
                                                                                 authenticationOptions,
                                                                                 CreateNewAccountOrGetExistingAccount,
-                                                                                CopyAccountToCustomJwt);
+                                                                                CopyAccountToCustomJwt,
+                                                                                cancellationToken);
             if (string.IsNullOrWhiteSpace(newBearerToken))
             {
                 // We failed to decode and/or create a new bearerToken.
@@ -76,7 +76,9 @@ namespace WorldDomination.DelegatedAuthentication.WebApi.Controllers
             return Ok(result);
         }
 
-        private Task<Account> CreateNewAccountOrGetExistingAccount(Auth0Jwt sourceJwt, CustomAuthenticationOptions options)
+        private Task<Account> CreateNewAccountOrGetExistingAccount(Auth0Jwt sourceJwt, 
+                                                                   CustomAuthenticationOptions options,
+                                                                   CancellationToken cancellationToken)
         {
             if (options == null)
             {
@@ -92,7 +94,7 @@ namespace WorldDomination.DelegatedAuthentication.WebApi.Controllers
 
             // This would most likely be some async method. But we're just doing an in-memory db so this method isn't
             // async in this sample project.
-            var existingAccount = _accountService.GetOrCreateAccount(account, options.SomeDatabaseContext, options.CancellationToken);
+            var existingAccount = _accountService.GetOrCreateAccount(account, options.SomeDatabaseContext, cancellationToken);
 
             return Task.FromResult(existingAccount);
         }

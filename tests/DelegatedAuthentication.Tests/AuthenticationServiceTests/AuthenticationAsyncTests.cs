@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Shouldly;
 using WorldDomination.DelegatedAuthentication.Auth0;
@@ -16,7 +17,9 @@ namespace WorldDomination.DelegatedAuthentication.Tests.AuthenticationServiceTes
             const string bearerToken = "aaaaaaaaaaa";
 
             var authenticationOptions = new CustomAuthenticationOptions();
-            Task<FakeAccount> CreateNewAccountOrGetExistingAccount(Auth0Jwt sourceJwt, CustomAuthenticationOptions options) => null;
+            Task<FakeAccount> CreateNewAccountOrGetExistingAccount(Auth0Jwt sourceJwt, 
+                                                                   CustomAuthenticationOptions options,
+                                                                   CancellationToken cancellationToken) => null;
             CustomJwt CopyAccountToCustomJwt(FakeAccount a, Auth0Jwt sourceJwt) => FakeData.FakeCustomJwt(null, null);
 
             var authenticationService = new AuthenticationService<Auth0Jwt, CustomJwt, CustomAuthenticationOptions, FakeAccount>(sourceJwtSecret, customJwtSecret)
@@ -53,7 +56,9 @@ namespace WorldDomination.DelegatedAuthentication.Tests.AuthenticationServiceTes
                 IsJwtExpiryValidatedWhenDecoding = false
             };
 
-            Task<FakeAccount> CreateNewAccountOrGetExistingAccount(Auth0Jwt sourceJwt, CustomAuthenticationOptions options) => Task.FromResult(account);
+            Task<FakeAccount> CreateNewAccountOrGetExistingAccount(Auth0Jwt sourceJwt, 
+                                                                   CustomAuthenticationOptions options, 
+                                                                   CancellationToken cancellationToken) => Task.FromResult(account);
             CustomJwt CopyAccountToCustomJwt(FakeAccount a, Auth0Jwt sourceJwt) => FakeData.FakeCustomJwt(sourceJwt, a);
 
             // Act.

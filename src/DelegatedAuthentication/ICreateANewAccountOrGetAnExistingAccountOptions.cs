@@ -1,6 +1,6 @@
 ﻿namespace WorldDomination.DelegatedAuthentication
 {
-    public interface IAuthenticationOptions
+    public interface ICreateANewAccountOrGetAnExistingAccountOptions
     {
     }
 }
