@@ -28,13 +28,13 @@ namespace WorldDomination.DelegatedAuthentication.Tests.AuthenticationServiceTes
             };
 
             // Act.
-            var token = await authenticationService.AuthenticateAsync(bearerToken,
-                                                           authenticationOptions, 
-                                                           CreateNewAccountOrGetExistingAccount,
-                                                           CopyAccountToCustomJwt);
+            var result = await authenticationService.AuthenticateAsync(bearerToken,
+                                                                       authenticationOptions, 
+                                                                       CreateNewAccountOrGetExistingAccount,
+                                                                       CopyAccountToCustomJwt);
 
             // Assert.
-            token.ShouldBeNullOrWhiteSpace();
+            result.ShouldBeNull();
         }
 
         [Fact]
@@ -62,13 +62,15 @@ namespace WorldDomination.DelegatedAuthentication.Tests.AuthenticationServiceTes
             CustomJwt CopyAccountToCustomJwt(FakeAccount a, Auth0Jwt sourceJwt) => FakeData.FakeCustomJwt(sourceJwt, a);
 
             // Act.
-            var token = await authenticationService.AuthenticateAsync(bearerToken,
-                                                           authenticationOptions,
-                                                           CreateNewAccountOrGetExistingAccount,
-                                                           CopyAccountToCustomJwt);
+            var authenticationResult = await authenticationService.AuthenticateAsync(bearerToken,
+                                                                                     authenticationOptions,
+                                                                                     CreateNewAccountOrGetExistingAccount,
+                                                                                     CopyAccountToCustomJwt);
 
             // Assert.
-            token.ShouldNotBeNullOrWhiteSpace();
+            authenticationResult.BearerToken.ShouldNotBeNullOrWhiteSpace();
+            authenticationResult.Account.Id.ShouldBe(account.Id);
+            authenticationResult.Account.Name.ShouldBe(account.Name);
         }
     }
 }

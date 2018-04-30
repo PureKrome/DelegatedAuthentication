@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 namespace WorldDomination.DelegatedAuthentication
 {
     /// <inheritdoc />
-    public class AuthenticationService<TSourceJwt, TCustomJwt, TOptions, TUser>
-        : IAuthenticationService<TSourceJwt, TCustomJwt, TOptions, TUser>
+    public class AuthenticationService<TSourceJwt, TCustomJwt, TOptions, TAccount>
+        : IAuthenticationService<TSourceJwt, TCustomJwt, TOptions, TAccount>
         where TSourceJwt : Jwt, new()
         where TCustomJwt : Jwt, new()
         where TOptions : ICreateANewAccountOrGetAnExistingAccountOptions, new()
-        where TUser : new()
+        where TAccount : new()
     {
         private readonly string _customJwtSecret;
         private readonly string _sourceJwtSecret;
@@ -36,11 +36,11 @@ namespace WorldDomination.DelegatedAuthentication
         public bool IsJwtExpiryValidatedWhenDecoding { private get; set; } = true;
 
         /// <inheritdoc />
-        public async Task<string> AuthenticateAsync(string bearerToken,
-                                                    TOptions createNewAccountOrGetExistingAccountOptions,
-                                                    Func<TSourceJwt, TOptions, CancellationToken, Task<TUser>> createNewAccountOrGetExistingAccount,
-                                                    Func<TUser, TSourceJwt, TCustomJwt> copyAccountToCustomJwt,
-                                                    CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<AuthenticationResult<TAccount>> AuthenticateAsync(string bearerToken,
+                                                                            TOptions createNewAccountOrGetExistingAccountOptions,
+                                                                            Func<TSourceJwt, TOptions, CancellationToken, Task<TAccount>> createNewAccountOrGetExistingAccount,
+                                                                            Func<TAccount, TSourceJwt, TCustomJwt> copyAccountToCustomJwt,
+                                                                            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrWhiteSpace(bearerToken))
             {
@@ -77,15 +77,20 @@ namespace WorldDomination.DelegatedAuthentication
                                                                      cancellationToken);
             if (account == null)
             {
-                throw new Exception(
-                    "Expected an 'account' to be retrieved (either new or an existing one) but recieved an 'null' account. We need to have an account created at this point, to continue.");
+                return null;
             }
 
             // Left-to-right copying.
             var customJwt = copyAccountToCustomJwt(account, sourceJwt);
+            if (customJwt == null)
+            {
+                return null;
+            }
 
             // Finally, Encode this new account into a new token.
-            return customJwt.Encode(_customJwtSecret);
+            var customBearerToken = customJwt.Encode(_customJwtSecret);
+
+            return new AuthenticationResult<TAccount>(customBearerToken, account);
         }
     }
 }

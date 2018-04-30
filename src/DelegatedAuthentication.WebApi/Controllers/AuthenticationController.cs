@@ -39,20 +39,22 @@ namespace WorldDomination.DelegatedAuthentication.WebApi.Controllers
                 SomeDatabaseContext = new object(), // This would be were you would pass in the current EF Context or RavenDb session, etc.
             };
 
-            var newBearerToken = await _authenticationService.AuthenticateAsync(bearerToken,
-                                                                                authenticationOptions,
-                                                                                CreateNewAccountOrGetExistingAccount,
-                                                                                CopyAccountToCustomJwt,
-                                                                                cancellationToken);
-            if (string.IsNullOrWhiteSpace(newBearerToken))
+            var authenticationResult = await _authenticationService.AuthenticateAsync(bearerToken,
+                                                                                      authenticationOptions,
+                                                                                      CreateNewAccountOrGetExistingAccount,
+                                                                                      CopyAccountToCustomJwt,
+                                                                                      cancellationToken);
+            if (authenticationResult == null ||
+                string.IsNullOrWhiteSpace(authenticationResult.BearerToken))
             {
                 // We failed to decode and/or create a new bearerToken.
-                return BadRequest("IdToken is invalid, fails to pass validation, has expired.");
+                return BadRequest("Source BearerToken is invalid, fails to pass validation, has expired.");
             }
 
             return Ok(new
             {
-                bearerToken = newBearerToken
+                bearerToken = authenticationResult.BearerToken,
+                id = authenticationResult.Account.Id
             });
         }
 
