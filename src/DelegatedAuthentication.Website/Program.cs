@@ -1,6 +1,5 @@
-﻿using System.IO;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace WorldDomination.DelegatedAuthentication.Website
 {
@@ -8,13 +7,14 @@ namespace WorldDomination.DelegatedAuthentication.Website
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            CreateHostBuilder(args).Build().Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                   .UseContentRoot(Directory.GetCurrentDirectory())
-                   .UseStartup<Startup>()
-                   .Build();
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
     }
 }

@@ -1,8 +1,9 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using WorldDomination.DelegatedAuthentication.Auth0;
 using WorldDomination.DelegatedAuthentication.WebApi.Models;
 using WorldDomination.DelegatedAuthentication.WebApi.Services;
@@ -21,9 +22,10 @@ namespace WorldDomination.DelegatedAuthentication.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvcCore()
-                    .AddAuthorization()
-                    .AddJsonFormatters()
+            services.AddControllers();
+
+            services.AddAuthorization()
+                    //.AddJsonFormatters()
                     .AddCors();
 
             var applicationSettings = Configuration.GetSection("Settings").Get<ApplicationSettings>();
@@ -44,19 +46,25 @@ namespace WorldDomination.DelegatedAuthentication.WebApi
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app,
-                              IHostingEnvironment env)
+                              IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseRouting();
+
             app.UseCors(builder => builder.WithOrigins("http://localhost:49497")
                                           .AllowAnyHeader()
                                           .AllowAnyMethod());
 
             app.UseAuthentication();
-            app.UseMvc();
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints => {
+                endpoints.MapControllers();
+            });
         }
     }
 }
