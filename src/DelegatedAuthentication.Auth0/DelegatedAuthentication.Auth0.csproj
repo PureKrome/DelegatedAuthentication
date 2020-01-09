@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -15,8 +15,18 @@
     <RepositoryUrl>https://github.com/PureKrome/DelegatedAuthentication</RepositoryUrl>
     <PackageTags>auth0 delegated authentication delegation worlddomination worldomination unicorn magicalunicorn magical-unicorn</PackageTags>
     <Version>0.0.0</Version>
+
+    <!-- Sourcelink -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
+  </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\DelegatedAuthentication\DelegatedAuthentication.csproj" />
   </ItemGroup>

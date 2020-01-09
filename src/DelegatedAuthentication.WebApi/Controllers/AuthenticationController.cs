@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,9 +38,15 @@ namespace WorldDomination.DelegatedAuthentication.WebApi.Controllers
             {
                 SomeDatabaseContext = new object(), // This would be were you would pass in the current EF Context or RavenDb session, etc.
             };
+            
 
-            var authenticationResult = await _authenticationService.AuthenticateAsync(bearerToken,
-                                                                                      authenticationOptions,
+            // ************************************************************
+            // This is the where all the magic happens!
+            // Given the Auth0 token (or could be any Delegated Authentication Provider) validate
+            // then create (or reuse) an Account in your own DB 
+            // and finally return a new JWT representing your OWN account.
+            var authenticationResult = await _authenticationService.AuthenticateAsync(bearerToken, // the Auth0 Bearer Token.
+                                                                                      authenticationOptions, // Options to help authenticate with your own DB.
                                                                                       CreateNewAccountOrGetExistingAccount,
                                                                                       CopyAccountToCustomJwt,
                                                                                       cancellationToken);
@@ -48,14 +54,15 @@ namespace WorldDomination.DelegatedAuthentication.WebApi.Controllers
                 string.IsNullOrWhiteSpace(authenticationResult.BearerToken))
             {
                 // We failed to decode and/or create a new bearerToken.
-                return BadRequest("Source BearerToken is invalid, fails to pass validation, has expired.");
+                return BadRequest("Source BearerToken is invalid or fails to pass validation or has expired.");
             }
 
-            return Ok(new
+            var responseModel = new
             {
                 bearerToken = authenticationResult.BearerToken,
                 id = authenticationResult.Account.Id
-            });
+            };
+            return Ok(responseModel);
         }
 
         [Authorize]
@@ -82,7 +89,7 @@ namespace WorldDomination.DelegatedAuthentication.WebApi.Controllers
                                                                    CustomAuthenticationOptions options,
                                                                    CancellationToken cancellationToken)
         {
-            if (options == null)
+            if (options is null)
             {
                 throw new ArgumentNullException(nameof(options));
             }
@@ -96,7 +103,7 @@ namespace WorldDomination.DelegatedAuthentication.WebApi.Controllers
 
             // This would most likely be some async method. But we're just doing an in-memory db so this method isn't
             // async in this sample project.
-            var existingAccount = _accountService.GetOrCreateAccount(account, options.SomeDatabaseContext, cancellationToken);
+            var existingAccount = _accountService.GetOrCreateAccount(account, options.SomeDatabaseContext);
 
             return Task.FromResult(existingAccount);
         }

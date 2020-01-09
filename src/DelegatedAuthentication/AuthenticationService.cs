@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -40,7 +40,7 @@ namespace WorldDomination.DelegatedAuthentication
                                                                             TOptions createNewAccountOrGetExistingAccountOptions,
                                                                             Func<TSourceJwt, TOptions, CancellationToken, Task<TAccount>> createNewAccountOrGetExistingAccount,
                                                                             Func<TAccount, TSourceJwt, TCustomJwt> copyAccountToCustomJwt,
-                                                                            CancellationToken cancellationToken = default(CancellationToken))
+                                                                            CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(bearerToken))
             {

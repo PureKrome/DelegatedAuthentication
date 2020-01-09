@@ -8,7 +8,7 @@
 
 version: '{build}.0.0-dev'
 configuration: Release
-os: Visual Studio 2017
+os: Visual Studio 2019
 pull_requests:
   do_not_increment_build_number: true
 environment:
@@ -32,33 +32,36 @@ before_build:
   - dotnet restore
 
 build_script:
-  - dotnet build -c %CONFIGURATION% /p:Version=%APPVEYOR_BUILD_VERSION%
+  - dotnet build -c %CONFIGURATION% /p:Version=%APPVEYOR_BUILD_VERSION% --no-restore
 
 test_script:
-  - dotnet test %tests_project_file% -c %CONFIGURATION% -v normal --no-build --no-restore
-  - dotnet pack %core_project_file% -c %CONFIGURATION% /p:Version=%APPVEYOR_BUILD_VERSION% --no-build --no-restore
-  - dotnet pack %auth0_project_file% -c %CONFIGURATION% /p:Version=%APPVEYOR_BUILD_VERSION% --no-build --no-restore
+  - dotnet test %tests_project_file% -c %CONFIGURATION% -v normal --no-build
+  - dotnet pack %core_project_file% -c %CONFIGURATION% /p:Version=%APPVEYOR_BUILD_VERSION% --no-build
+  - dotnet pack %auth0_project_file% -c %CONFIGURATION% /p:Version=%APPVEYOR_BUILD_VERSION% --no-build
 
 artifacts:
   - path: '**\*.nupkg'
+    name: nuget-packages
+    type: NuGetPackage
+  - path: '**\*.snupkg'
+    name: nuget-symbols
+    type: NuGetPackage
 
 deploy:
+
+  # NOTE: MyGet doesn't support snupkg's so we have to manually specify the nuget to send
   - provider: NuGet
     server: https://www.myget.org/F/pk-development/api/v2/package
     api_key:
       secure: 36bcjhroAjclbHs7e7oh6Hsv4lokADI6xaQcCYZmux2Sdu/IIoktFc9ORK3DTdKo
     skip_symbols: true
-    artifact: /.*\.nupkg/
+    artifact: nuget-packages
     on:
       appveyor_repo_tag: false
   - provider: NuGet
     api_key:
       secure: jfcUvHZhgnUboplqTBDWr8mG5PIlrgBv5TA2fhhop4ZSiDxskyy+RtYyeHoduJFR
     skip_symbols: true
-    artifact: /.*\.nupkg/
     on:
       branch: master
       appveyor_repo_tag: true
-
-cache:
-  - packages -> **\packages.config

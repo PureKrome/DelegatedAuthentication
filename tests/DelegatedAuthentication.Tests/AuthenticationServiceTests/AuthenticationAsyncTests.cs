@@ -16,13 +16,13 @@ namespace WorldDomination.DelegatedAuthentication.Tests.AuthenticationServiceTes
             const string customJwtSecret = "adsadas";
             const string bearerToken = "aaaaaaaaaaa";
 
-            var authenticationOptions = new CustomAuthenticationOptions();
+            var authenticationOptions = new NoOpAuthenticationOptions();
             Task<FakeAccount> CreateNewAccountOrGetExistingAccount(Auth0Jwt sourceJwt, 
-                                                                   CustomAuthenticationOptions options,
+                                                                   NoOpAuthenticationOptions options,
                                                                    CancellationToken cancellationToken) => null;
             CustomJwt CopyAccountToCustomJwt(FakeAccount a, Auth0Jwt sourceJwt) => FakeData.FakeCustomJwt(null, null);
 
-            var authenticationService = new AuthenticationService<Auth0Jwt, CustomJwt, CustomAuthenticationOptions, FakeAccount>(sourceJwtSecret, customJwtSecret)
+            var authenticationService = new AuthenticationService<Auth0Jwt, CustomJwt, NoOpAuthenticationOptions, FakeAccount>(sourceJwtSecret, customJwtSecret)
             {
                 IsJwtExpiryValidatedWhenDecoding = false
             };
@@ -50,14 +50,14 @@ namespace WorldDomination.DelegatedAuthentication.Tests.AuthenticationServiceTes
                 Name = auth0Jwt.Name
             };
             var bearerToken = auth0Jwt.Encode(sourceJwtSecret);
-            var authenticationOptions = new CustomAuthenticationOptions();
-            var authenticationService = new AuthenticationService<Auth0Jwt, CustomJwt, CustomAuthenticationOptions, FakeAccount>(sourceJwtSecret, customJwtSecret)
+            var authenticationOptions = new NoOpAuthenticationOptions();
+            var authenticationService = new AuthenticationService<Auth0Jwt, CustomJwt, NoOpAuthenticationOptions, FakeAccount>(sourceJwtSecret, customJwtSecret)
             {
                 IsJwtExpiryValidatedWhenDecoding = false
             };
 
             Task<FakeAccount> CreateNewAccountOrGetExistingAccount(Auth0Jwt sourceJwt, 
-                                                                   CustomAuthenticationOptions options, 
+                                                                   NoOpAuthenticationOptions options, 
                                                                    CancellationToken cancellationToken) => Task.FromResult(account);
             CustomJwt CopyAccountToCustomJwt(FakeAccount a, Auth0Jwt sourceJwt) => FakeData.FakeCustomJwt(sourceJwt, a);
 

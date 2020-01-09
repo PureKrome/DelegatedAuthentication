@@ -30,7 +30,7 @@ function initializeAuth() {
     var options = {
         auth: {
             responseType: "token id_token",
-            params: { scope: "openid profile" }
+            params: { scope: "openid profile email" }
         }
     };
 

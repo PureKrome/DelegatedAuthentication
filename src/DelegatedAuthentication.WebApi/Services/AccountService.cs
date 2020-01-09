@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Threading;
 using WorldDomination.DelegatedAuthentication.WebApi.Models;
@@ -7,7 +7,10 @@ namespace WorldDomination.DelegatedAuthentication.WebApi.Services
 {
     public class AccountService : IAccountService
     {
+        // Fake 'database' of accounts. Only good for this demo because it exists only in RAM.
         private readonly ConcurrentDictionary<string, Account> _accounts;
+
+        // Internal account Id "identity" counter. Only good for this demo, etc.
         private int _accountId;
 
         public AccountService(ConcurrentDictionary<string, Account> accounts)
@@ -15,7 +18,8 @@ namespace WorldDomination.DelegatedAuthentication.WebApi.Services
             _accounts = accounts ?? throw new ArgumentNullException(nameof(accounts));
         }
 
-        public Account GetOrCreateAccount(Account account, object dbContextOrSession, CancellationToken cancellationToken)
+        /// <inheritdoc/>
+        public Account GetOrCreateAccount(Account account, object dbContextOrSession)
         {
             if (account == null)
             {
@@ -25,11 +29,6 @@ namespace WorldDomination.DelegatedAuthentication.WebApi.Services
             if (dbContextOrSession == null)
             {
                 throw new ArgumentNullException(nameof(dbContextOrSession));
-            }
-
-            if (cancellationToken == null)
-            {
-                throw new ArgumentNullException(nameof(cancellationToken));
             }
 
             // NOTE: We're using an inmemory account (because we're cheating in this Sample project), 
