@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using JWT;
 using JWT.Algorithms;
 using JWT.Serializers;
@@ -42,9 +42,8 @@ namespace WorldDomination.DelegatedAuthentication
             catch
             {
                 // Validation failed (i.e. expired) -or- token wasn't a valid JWT.
-                return default(T);
+                return default;
             }
         }
-
     }
 }
