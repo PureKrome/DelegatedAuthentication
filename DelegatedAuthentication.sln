@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DelegatedAuthentication", "src\DelegatedAuthentication\DelegatedAuthentication.csproj", "{F962B19C-6913-4A22-ACA3-5283C96265E5}"
 EndProject
@@ -14,6 +14,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DelegatedAuthentication.Website", "src\DelegatedAuthentication.Website\DelegatedAuthentication.Website.csproj", "{1C9F204B-D3E7-4B87-80AF-58B34B8BA2E3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DelegatedAuthentication.Tests", "tests\DelegatedAuthentication.Tests\DelegatedAuthentication.Tests.csproj", "{341DD0D4-EB14-4C61-BE35-CE83D078E347}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{83A32F78-8FED-4816-A3EC-C8FD2D745D9B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{072D4357-DFD3-4DDF-90F7-C2DF01130BF8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,8 +50,11 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{F962B19C-6913-4A22-ACA3-5283C96265E5} = {83A32F78-8FED-4816-A3EC-C8FD2D745D9B}
+		{DC61762F-9ABC-4E80-8D47-65BAE517AA7B} = {83A32F78-8FED-4816-A3EC-C8FD2D745D9B}
 		{4022C9BC-7247-4B1F-8E5B-91BDDEE41AFA} = {81B00BDF-318A-4C5A-BE2E-242F97BA572D}
 		{1C9F204B-D3E7-4B87-80AF-58B34B8BA2E3} = {81B00BDF-318A-4C5A-BE2E-242F97BA572D}
+		{341DD0D4-EB14-4C61-BE35-CE83D078E347} = {072D4357-DFD3-4DDF-90F7-C2DF01130BF8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FE5F4A2D-8417-4930-9C18-70D13494A8E6}

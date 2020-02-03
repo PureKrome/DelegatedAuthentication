@@ -25,7 +25,6 @@ namespace WorldDomination.DelegatedAuthentication.WebApi
             services.AddControllers();
 
             services.AddAuthorization()
-                    //.AddJsonFormatters()
                     .AddCors();
 
             var applicationSettings = Configuration.GetSection("Settings").Get<ApplicationSettings>();
