@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>WorldDomination.DelegatedAuthentication.RealisticWebApi</RootNamespace>
+    <AssemblyName>WorldDomination.DelegatedAuthentication.RealisticWebApi</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DelegatedAuthentication.Application\DelegatedAuthentication.Application.csproj" />
+    <ProjectReference Include="..\DelegatedAuthentication.Infrastructure\DelegatedAuthentication.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,13 +1,12 @@
 using System;
 using System.Text;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
-namespace WorldDomination.DelegatedAuthentication.WebApi
+namespace WorldDomination.DelegatedAuthentication.Application.Authentication
 {
-    public static class CustomJwtAuthenticationExtensions
+    internal static class CustomJwtAuthenticationExtensions
     {
         public static AuthenticationBuilder AddCustomJwtAuthentication(this IServiceCollection services,
                                                                        string audience,
@@ -51,7 +50,7 @@ namespace WorldDomination.DelegatedAuthentication.WebApi
                 ValidAudience = audience
             };
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services.AddAuthentication("Bearer")
                     .AddJwtBearer(options => { options.TokenValidationParameters = tokenValidationParameters; });
 
             return new AuthenticationBuilder(services);

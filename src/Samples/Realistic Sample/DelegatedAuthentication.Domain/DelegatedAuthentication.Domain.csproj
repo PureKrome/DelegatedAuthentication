@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>WorldDomination.DelegatedAuthentication.Domain</AssemblyName>
+    <RootNamespace>WorldDomination.DelegatedAuthentication.Domain</RootNamespace>
+  </PropertyGroup>
+
+</Project>

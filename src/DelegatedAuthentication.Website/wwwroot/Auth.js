@@ -10,9 +10,10 @@ var authenticateRoute = "Authenticate";
 var testAuthenticationRoute = "AuthenticateTest";
 
 // AUTH0 CREDENTIALS.
-var auth0ClientId = "Place Your Auth0 ClientId in here";
-var auth0Domain = "<place your auth0 tenant here>.au.auth0.com";
-
+//var auth0ClientId = "Place Your Auth0 ClientId in here";
+//var auth0Domain = "<place your auth0 tenant here>.au.auth0.com";
+var auth0ClientId = "DvNbfkkR3C42i1oUwb5McbOnji5WBnvz";
+var auth0Domain = "hornet-wd-dev.au.auth0.com";
 
 // *******************************************************************************************************
 // *******************************************************************************************************
@@ -22,7 +23,9 @@ var auth0Domain = "<place your auth0 tenant here>.au.auth0.com";
 
 
 var lock;
-var idTokenLocalStorageKey = "idToken";
+var auth0BearerTokenLocalStorageKey = "Auth0BearerToken";
+var customBearerTokenLocalStorageKey = "customBearerToken";
+var userIdLocalStorageKey = "userId";
 
 function initializeAuth() {
     
@@ -52,33 +55,66 @@ function showSignInDialog() {
 }
 
 function signOut() {
-    removeIdToken();
+
+    clearLocalStorage();
+
     lock.logout({
         returnTo: "http://localhost:49497"
     });
 }
 
-function getIdToken() {
-    return localStorage.getItem(idTokenLocalStorageKey);
+function getAuth0BearerToken() {
+    return localStorage.getItem(auth0BearerTokenLocalStorageKey);
 }
 
-function setIdToken() {
-    localStorage.setItem(idTokenLocalStorageKey);
+function setAuth0BearerToken(data) {
+    localStorage.setItem(auth0BearerTokenLocalStorageKey, data);
 }
 
-function removeIdToken() {
-    localStorage.removeItem(idTokenLocalStorageKey);
+function removeAuth0BearerToken() {
+    localStorage.removeItem(auth0BearerTokenLocalStorageKey);
 }
 
-function authenticateWithServer(idToken) {
+function getCustomBearerToken() {
+    return localStorage.getItem(auth0BearerTokenLocalStorageKey);
+}
+
+function setCustomBearerToken(data) {
+    localStorage.setItem(auth0BearerTokenLocalStorageKey, data);
+}
+
+function removeCustomBearerToken() {
+    localStorage.removeItem(auth0BearerTokenLocalStorageKey);
+}
+
+function getUserId() {
+    return localStorage.getItem(userIdLocalStorageKey);
+}
+
+function setUserId(data) {
+    localStorage.setItem(userIdLocalStorageKey, data);
+}
+
+function removeUserId() {
+    localStorage.removeItem(userIdLocalStorageKey);
+}
+
+function clearLocalStorage() {
+    removeAuth0BearerToken();
+    removeCustomBearerToken();
+    removeUserId();
+}
+
+function authenticateWithServer(auth0BearerToken) {
 
     $.post(webApiUrl + authenticateRoute,
         {
-            bearerToken: idToken
+            bearerToken: auth0BearerToken
         },
         function(data, status) {
-            var sss = data.bearerToken;
-            localStorage.setItem(idTokenLocalStorageKey, data.bearerToken);
+            setAuth0BearerToken(auth0BearerToken);
+            setCustomBearerToken(data.bearerToken);
+            setUserId(data.userId);
             showSignedIn();
         });
 }
@@ -87,12 +123,12 @@ function testAuthentication() {
 
     $.ajax({
         url: webApiUrl + testAuthenticationRoute,
-        headers: { "Authorization" : "bearer " + getIdToken() }
+        headers: { "Authorization": "bearer " + getCustomBearerToken() }
     }).done(function(result) {
         document.getElementById("testAuthenticationResult").textContent = JSON.stringify(result);
     }).fail(function(xhr) {
         var text = xhr.status + " : " + xhr.statusText + " : " + xhr.responseText;
-        document.getElementById("testAuthenticationResult").textContent =text;
+        document.getElementById("testAuthenticationResult").textContent = text;
     });
 
     

@@ -12,7 +12,7 @@ namespace WorldDomination.DelegatedAuthentication
         private static readonly IJsonSerializer Serializer = new JsonNetSerializer(new CustomJsonSerializer());
         private static readonly IBase64UrlEncoder UrlEncoder = new JwtBase64UrlEncoder();
         private static readonly IJwtValidator Validator = new JwtValidator(Serializer, Provider);
-        private static readonly IJwtDecoder Decoder = new JwtDecoder(Serializer, Validator, UrlEncoder);
+        private static readonly IJwtDecoder Decoder = new JwtDecoder(Serializer, Validator, UrlEncoder, Algorithm);
         private static readonly IJwtEncoder Encoder = new JwtEncoder(Algorithm, Serializer, UrlEncoder);
 
         public static string Encode(this Jwt payload,

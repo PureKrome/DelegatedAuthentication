@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,12 +8,12 @@ namespace WorldDomination.DelegatedAuthentication
     /// Interface that defines how we can authenticate to your own system given a authenticated 3rd party JWT.
     /// </summary>
     /// <typeparam name="TSourceJwt">Jwt: 3rd party JWT from some service which we have delegated the authentication, too.</typeparam>
-    /// <typeparam name="TCustomJwt">Jwt: you own custom JWT, based off the Source JWT.</typeparam>
+    /// <typeparam name="TDestinationJwt">Jwt: you own custom JWT, based off the Source JWT.</typeparam>
     /// <typeparam name="TOptions">ICreateANewAccountOrGetAnExistingAccountOptions: some custom options that are needed for you to help check/store this account into your db.</typeparam>
     /// <typeparam name="TAccount">Your account.</typeparam>
-    public interface IAuthenticationService<out TSourceJwt, in TCustomJwt, TOptions, TAccount>
+    public interface IAuthenticationService<out TSourceJwt, in TDestinationJwt, TOptions, TAccount>
         where TSourceJwt : Jwt, new()
-        where TCustomJwt : Jwt, new()
+        where TDestinationJwt : Jwt, new()
         where TOptions : ICreateANewAccountOrGetAnExistingAccountOptions, new()
         where TAccount : new()
     {
@@ -36,7 +36,7 @@ namespace WorldDomination.DelegatedAuthentication
         Task<AuthenticationResult<TAccount>> AuthenticateAsync(string bearerToken,
                                                             TOptions createANewAccountOrGetAnExistingAccountOptions,
                                                             Func<TSourceJwt, TOptions, CancellationToken, Task<TAccount>> createNewAccountOrGetExistingAccount,
-                                                            Func<TAccount, TSourceJwt, TCustomJwt> copyAccountToCustomJwt,
-                                                            CancellationToken cancellationToken = default(CancellationToken));
+                                                            Func<TAccount, TSourceJwt, TDestinationJwt> copyAccountToCustomJwt,
+                                                            CancellationToken cancellationToken = default);
     }
 }

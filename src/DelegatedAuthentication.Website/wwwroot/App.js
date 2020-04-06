@@ -2,7 +2,7 @@
 
 function initialize()
 {
-    if (getIdToken() === null) {
+    if (getAuth0BearerToken() === null) {
         // No login data stored.
         showNotSignedIn();
     } else {
@@ -18,7 +18,7 @@ function showNotSignedIn() {
 
 function showSignedIn() {
     toggleSignInDivs("none", "block");
-    document.getElementById("signedInIdToken").textContent = getIdToken();
+    document.getElementById("signedInIdToken").textContent = "UserId [" + getUserId() + "]<br/>" + "Auth0 Bearer: " + getAuth0BearerToken() + "<br/>Custom Bearer: " + getCustomBearerToken();
 }
 
 function toggleSignInDivs(notSignedInDivValue, signedInDivValue) {

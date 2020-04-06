@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DelegatedAuthentication.Aut
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DelegatedAuthentication.WebApi", "src\DelegatedAuthentication.WebApi\DelegatedAuthentication.WebApi.csproj", "{4022C9BC-7247-4B1F-8E5B-91BDDEE41AFA}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{81B00BDF-318A-4C5A-BE2E-242F97BA572D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{81B00BDF-318A-4C5A-BE2E-242F97BA572D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DelegatedAuthentication.Website", "src\DelegatedAuthentication.Website\DelegatedAuthentication.Website.csproj", "{1C9F204B-D3E7-4B87-80AF-58B34B8BA2E3}"
 EndProject
@@ -18,6 +18,20 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{83A32F78-8FED-4816-A3EC-C8FD2D745D9B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{072D4357-DFD3-4DDF-90F7-C2DF01130BF8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApis", "WebApis", "{055EC438-4063-4EB2-ABA9-ADB296AF4150}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Simple Controller WebApi sample", "Simple Controller WebApi sample", "{E894E8EE-9550-4A23-ABDB-E819A03BFC36}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clean Architecture with CQRS and Mediator sample", "Clean Architecture with CQRS and Mediator sample", "{171555E4-A4BF-400A-9699-F1BDC81E14BC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DelegatedAuthentication.Domain", "src\Samples\Realistic Sample\DelegatedAuthentication.Domain\DelegatedAuthentication.Domain.csproj", "{956DC96A-F4C9-4713-852E-2A82426EEBAA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DelegatedAuthentication.Application", "src\Samples\Realistic Sample\DelegatedAuthentication.Application\DelegatedAuthentication.Application.csproj", "{AA49FB85-C8B0-46C4-BE14-CC705BC6217C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DelegatedAuthentication.RealisticWebApi", "src\Samples\Realistic Sample\DelegatedAuthentication.RealisticWebApi\DelegatedAuthentication.RealisticWebApi.csproj", "{E3B1BAE0-A1DB-4222-8D49-17F773C8DF6E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DelegatedAuthentication.Infrastructure", "src\Samples\Realistic Sample\DelegatedAuthentication.Infrastructure\DelegatedAuthentication.Infrastructure.csproj", "{757E7BBA-E1D0-4775-8075-1DAE6EE63A6C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +59,22 @@ Global
 		{341DD0D4-EB14-4C61-BE35-CE83D078E347}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{341DD0D4-EB14-4C61-BE35-CE83D078E347}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{341DD0D4-EB14-4C61-BE35-CE83D078E347}.Release|Any CPU.Build.0 = Release|Any CPU
+		{956DC96A-F4C9-4713-852E-2A82426EEBAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{956DC96A-F4C9-4713-852E-2A82426EEBAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{956DC96A-F4C9-4713-852E-2A82426EEBAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{956DC96A-F4C9-4713-852E-2A82426EEBAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA49FB85-C8B0-46C4-BE14-CC705BC6217C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA49FB85-C8B0-46C4-BE14-CC705BC6217C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA49FB85-C8B0-46C4-BE14-CC705BC6217C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA49FB85-C8B0-46C4-BE14-CC705BC6217C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3B1BAE0-A1DB-4222-8D49-17F773C8DF6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3B1BAE0-A1DB-4222-8D49-17F773C8DF6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3B1BAE0-A1DB-4222-8D49-17F773C8DF6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3B1BAE0-A1DB-4222-8D49-17F773C8DF6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{757E7BBA-E1D0-4775-8075-1DAE6EE63A6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{757E7BBA-E1D0-4775-8075-1DAE6EE63A6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{757E7BBA-E1D0-4775-8075-1DAE6EE63A6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{757E7BBA-E1D0-4775-8075-1DAE6EE63A6C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -52,9 +82,16 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{F962B19C-6913-4A22-ACA3-5283C96265E5} = {83A32F78-8FED-4816-A3EC-C8FD2D745D9B}
 		{DC61762F-9ABC-4E80-8D47-65BAE517AA7B} = {83A32F78-8FED-4816-A3EC-C8FD2D745D9B}
-		{4022C9BC-7247-4B1F-8E5B-91BDDEE41AFA} = {81B00BDF-318A-4C5A-BE2E-242F97BA572D}
+		{4022C9BC-7247-4B1F-8E5B-91BDDEE41AFA} = {E894E8EE-9550-4A23-ABDB-E819A03BFC36}
 		{1C9F204B-D3E7-4B87-80AF-58B34B8BA2E3} = {81B00BDF-318A-4C5A-BE2E-242F97BA572D}
 		{341DD0D4-EB14-4C61-BE35-CE83D078E347} = {072D4357-DFD3-4DDF-90F7-C2DF01130BF8}
+		{055EC438-4063-4EB2-ABA9-ADB296AF4150} = {81B00BDF-318A-4C5A-BE2E-242F97BA572D}
+		{E894E8EE-9550-4A23-ABDB-E819A03BFC36} = {055EC438-4063-4EB2-ABA9-ADB296AF4150}
+		{171555E4-A4BF-400A-9699-F1BDC81E14BC} = {055EC438-4063-4EB2-ABA9-ADB296AF4150}
+		{956DC96A-F4C9-4713-852E-2A82426EEBAA} = {171555E4-A4BF-400A-9699-F1BDC81E14BC}
+		{AA49FB85-C8B0-46C4-BE14-CC705BC6217C} = {171555E4-A4BF-400A-9699-F1BDC81E14BC}
+		{E3B1BAE0-A1DB-4222-8D49-17F773C8DF6E} = {171555E4-A4BF-400A-9699-F1BDC81E14BC}
+		{757E7BBA-E1D0-4775-8075-1DAE6EE63A6C} = {171555E4-A4BF-400A-9699-F1BDC81E14BC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FE5F4A2D-8417-4930-9C18-70D13494A8E6}
