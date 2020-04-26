@@ -17,6 +17,22 @@ namespace WorldDomination.DelegatedAuthentication.WebApi
             Configuration = configuration;
         }
 
+        // TODO LIST
+        /*
+         * 1. TEST this with WEB SITE.
+         *   - use app settings AUTH settings (for the jwt validation).
+         *   - make sure the custom shit is using config settings (from above)
+         *   - make sure clientid/domain-audience is in the front end JS.
+         * 2. Check code cov (refer to Homely.AspNetCore.Hosting.CoreApp with coverlet settings
+         *       => dotnet test --collect:"XPlat Code Coverage" --settings coverlet.runsettings -r reportoutput
+         *       => reportgenerator.exe "-reports:reportoutput\**\coverage.cobertura.xml" "-targetdir:reports" "-reporttypes:textsummary"
+         * 3. Remove secrets
+         * */
+
+            sdfdsfddfsdsdsfdsffds
+            dsddfsdsffdsdfs  REMOVE THESE
+
+
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
